@@ -160,7 +160,7 @@ function loadProducts() {
 function initProductsCarousel() {
     const productSlides = document.querySelectorAll('.product-slide');
     const totalProducts = productSlides.length;
-    const productsPerView = window.innerWidth > 768 ? 4 : 2;
+    const productsPerView = window.innerWidth > 768 ? 4 : 1;
     const totalPages = Math.ceil(totalProducts / productsPerView);
     
     // Create indicators
