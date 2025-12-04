@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://www.efitness.com/sitemap.xml
+
+# Disallow admin and private directories (if any in the future)
+Disallow: /admin/
+Disallow: /private/
+
+# Crawl delay (optional)
+Crawl-delay: 10
+
