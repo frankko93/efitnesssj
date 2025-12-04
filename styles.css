@@ -210,6 +210,31 @@ body::before {
     width: 100%;
 }
 
+/* Instagram Icon in Navbar */
+.nav-instagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-left: 1.5rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(131, 58, 180, 0.3);
+}
+
+.nav-instagram:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 6px 25px rgba(131, 58, 180, 0.5);
+}
+
+.nav-instagram svg {
+    width: 22px;
+    height: 22px;
+}
+
 /* Hamburger Menu */
 .hamburger {
     display: none;
@@ -1736,11 +1761,22 @@ body::before {
     }
 
     .logo img {
-        height: 80px;
+        height: 110px;
     }
 
     .navbar.scrolled .logo img {
-        height: 65px;
+        height: 90px;
+    }
+
+    .nav-instagram {
+        width: 38px;
+        height: 38px;
+        margin-left: 1rem;
+    }
+
+    .nav-instagram svg {
+        width: 20px;
+        height: 20px;
     }
 
     .hamburger {
