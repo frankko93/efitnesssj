@@ -176,9 +176,17 @@ function initProductsCarousel() {
     }
     
     function updateCarousel() {
-        const slideWidth = productSlides[0].offsetWidth;
-        const gap = 32; // 2rem in pixels
-        const translateX = currentProductPage * productsPerView * (slideWidth + gap);
+        // Get the actual computed gap from CSS
+        const style = window.getComputedStyle(productsCarousel);
+        const gap = parseFloat(style.gap) || 16;
+        
+        // Calculate the exact translateX based on actual slide positions
+        let translateX = 0;
+        for (let i = 0; i < currentProductPage * productsPerView; i++) {
+            if (productSlides[i]) {
+                translateX += productSlides[i].offsetWidth + gap;
+            }
+        }
         
         productsCarousel.style.transform = `translateX(-${translateX}px)`;
         
