@@ -388,6 +388,40 @@ document.querySelectorAll('.product-slide, .contact-list-item, .promo-card').for
     });
 });
 
+// Scroll Spy - Active menu item based on current section
+function updateActiveNavItem() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-menu a[href^="#"]');
+    const navbar = document.querySelector('.navbar');
+    const navbarHeight = navbar ? navbar.offsetHeight : 0;
+    
+    let currentSection = '';
+    const scrollPosition = window.pageYOffset + navbarHeight + 100;
+    
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+        const sectionId = section.getAttribute('id');
+        
+        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+            currentSection = sectionId;
+        }
+    });
+    
+    // If we're at the top, highlight "inicio"
+    if (window.pageYOffset < 200) {
+        currentSection = 'inicio';
+    }
+    
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        const href = link.getAttribute('href');
+        if (href === `#${currentSection}`) {
+            link.classList.add('active');
+        }
+    });
+}
+
 // Initialize all animations
 document.addEventListener('DOMContentLoaded', () => {
     // Ensure hero animations start
@@ -402,4 +436,36 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.transition = 'opacity 0.5s ease';
         document.body.style.opacity = '1';
     }, 100);
+    
+    // Initialize scroll spy
+    updateActiveNavItem();
 });
+
+// Update active nav item on scroll
+window.addEventListener('scroll', () => {
+    updateActiveNavItem();
+    updateBackToTopButton();
+});
+
+// Back to Top Button
+function updateBackToTopButton() {
+    const backToTopBtn = document.getElementById('backToTop');
+    if (backToTopBtn) {
+        if (window.pageYOffset > 300) {
+            backToTopBtn.classList.add('visible');
+        } else {
+            backToTopBtn.classList.remove('visible');
+        }
+    }
+}
+
+// Back to Top functionality
+const backToTopBtn = document.getElementById('backToTop');
+if (backToTopBtn) {
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+}
