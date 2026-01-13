@@ -106,18 +106,15 @@ if (promoCarouselContainer) {
 
 // Products Carousel - Improved with categories
 const products = [
-    { image: 'images/local/_DSC0069.jpg', name: 'BSN Syntha-6', category: 'Proteínas' },
-    { image: 'images/local/_DSC0071-2.jpg', name: 'Platinum Whey', category: 'Proteínas' },
-    { image: 'images/local/_DSC0074.jpg', name: 'Botellas Everlast', category: 'Accesorios' },
-    { image: 'images/local/_DSC0078.jpg', name: 'Whey Protein', category: 'Proteínas' },
-    { image: 'images/local/_DSC0080.jpg', name: 'BCAA', category: 'Recuperación' },
-    { image: 'images/local/_DSC0102.jpg', name: 'Variedad Premium', category: 'Suplementos' },
-    { image: 'images/local/_DSC6601-2.jpg', name: 'LAX Whey + Creatina', category: 'Combos' },
-    { image: 'images/local/_DSC6601.jpg', name: 'LAX Whey 3.5', category: 'Proteínas' },
-    { image: 'images/local/_DSC7574.jpg', name: 'LAX Whey 3.5', category: 'Proteínas' },
-    { image: 'images/local/_DSC7578.jpg', name: 'ENA TrueMade', category: 'Proteínas' },
-    { image: 'images/local/_DSC7580.jpg', name: 'Body Advance Whey', category: 'Combos' },
-    { image: 'images/local/_DSC7581.jpg', name: 'Body Advance Gold', category: 'Combos' }
+    { image: 'images/local/DSC_0823.jpg', name: 'BSN Syntha-6', category: 'Proteínas' },
+    { image: 'images/local/DSC_0828.jpg', name: 'Platinum Whey', category: 'Proteínas' },
+    { image: 'images/local/DSC_0832.jpg', name: 'Botellas Everlast', category: 'Accesorios' },
+    { image: 'images/local/DSC_0834.jpg', name: 'Whey Protein', category: 'Proteínas' },
+    { image: 'images/local/DSC_0838.jpg', name: 'BCAA', category: 'Recuperación' },
+    { image: 'images/local/DSC_0839.jpg', name: 'Variedad Premium', category: 'Suplementos' },
+    { image: 'images/local/DSC_0842.jpg', name: 'LAX Whey + Creatina', category: 'Combos' },
+    { image: 'images/local/DSC_0843.jpg', name: 'LAX Whey 3.5', category: 'Proteínas' },
+    { image: 'images/local/DSC_0845.jpg', name: 'LAX Whey 3.5', category: 'Proteínas' }
 ];
 
 let currentProductPage = 0;
@@ -165,6 +162,7 @@ function initProductsCarousel() {
     
     // Create indicators
     if (productIndicators) {
+        productIndicators.innerHTML = ''; // Clear existing indicators
         for (let i = 0; i < totalPages; i++) {
             const dot = document.createElement('button');
             dot.className = 'indicator-dot';
@@ -213,30 +211,54 @@ function initProductsCarousel() {
     }
     
     // Products carousel buttons
-    document.getElementById('nextProductBtn').addEventListener('click', () => {
-        scrollProductsCarousel('next');
-    });
+    const nextBtn = document.getElementById('nextProductBtn');
+    const prevBtn = document.getElementById('prevProductBtn');
     
-    document.getElementById('prevProductBtn').addEventListener('click', () => {
-        scrollProductsCarousel('prev');
-    });
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            scrollProductsCarousel('next');
+        });
+    }
     
-    // Auto-scroll products carousel
-    let autoScrollInterval = setInterval(() => {
-        scrollProductsCarousel('next');
-    }, 5000);
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            scrollProductsCarousel('prev');
+        });
+    }
+    
+    // Auto-scroll products carousel with proper loop
+    let autoScrollInterval = null;
+    
+    function startAutoScroll() {
+        // Clear any existing interval
+        if (autoScrollInterval) {
+            clearInterval(autoScrollInterval);
+        }
+        
+        autoScrollInterval = setInterval(() => {
+            scrollProductsCarousel('next');
+        }, 5000);
+    }
+    
+    function stopAutoScroll() {
+        if (autoScrollInterval) {
+            clearInterval(autoScrollInterval);
+            autoScrollInterval = null;
+        }
+    }
+    
+    // Start auto-scroll
+    startAutoScroll();
     
     // Pause auto-scroll on hover
     const productsCarouselContainer = document.querySelector('.products-carousel-container');
     if (productsCarouselContainer) {
         productsCarouselContainer.addEventListener('mouseenter', () => {
-            clearInterval(autoScrollInterval);
+            stopAutoScroll();
         });
         
         productsCarouselContainer.addEventListener('mouseleave', () => {
-            autoScrollInterval = setInterval(() => {
-                scrollProductsCarousel('next');
-            }, 5000);
+            startAutoScroll();
         });
     }
     
@@ -244,7 +266,11 @@ function initProductsCarousel() {
     let resizeTimeout;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(updateCarousel, 250);
+        resizeTimeout = setTimeout(() => {
+            stopAutoScroll();
+            updateCarousel();
+            startAutoScroll();
+        }, 250);
     });
 }
 
@@ -273,9 +299,25 @@ const observer = new IntersectionObserver((entries) => {
 }, observerOptions);
 
 // Observe elements for scroll animation
-document.querySelectorAll('.product-slide, .contact-list-item, .section-title, .section-header').forEach(el => {
+document.querySelectorAll('.product-slide, .contact-list-item, .section-title, .section-header, .service-card, .equipment-category, .synergy-card, .testimonial-card').forEach(el => {
     el.classList.add('scroll-reveal');
     observer.observe(el);
+});
+
+// Enhanced reveal for cards with stagger
+const cardObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+        }
+    });
+}, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+});
+
+document.querySelectorAll('.service-card, .equipment-category, .synergy-card, .testimonial-card').forEach(card => {
+    cardObserver.observe(card);
 });
 
 // Enhanced Navbar scroll effect
@@ -333,11 +375,19 @@ window.addEventListener('load', () => {
 
 // Mouse move parallax effect for hero
 document.addEventListener('mousemove', (e) => {
-    const hero = document.querySelector('.hero-content');
-    if (hero) {
-        const x = (e.clientX / window.innerWidth - 0.5) * 20;
-        const y = (e.clientY / window.innerHeight - 0.5) * 20;
-        hero.style.transform = `translate(${x}px, ${y}px)`;
+    const heroContent = document.querySelector('.hero-content');
+    const heroBackground = document.querySelector('.hero-background');
+    
+    if (heroContent) {
+        const x = (e.clientX / window.innerWidth - 0.5) * 15;
+        const y = (e.clientY / window.innerHeight - 0.5) * 15;
+        heroContent.style.transform = `translate(${x}px, ${y}px)`;
+    }
+    
+    if (heroBackground) {
+        const x = (e.clientX / window.innerWidth - 0.5) * 10;
+        const y = (e.clientY / window.innerHeight - 0.5) * 10;
+        heroBackground.style.transform = `translate(${x}px, ${y}px) scale(1.05)`;
     }
 });
 
